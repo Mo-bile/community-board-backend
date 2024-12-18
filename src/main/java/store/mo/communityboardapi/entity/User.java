@@ -3,7 +3,7 @@ package store.mo.communityboardapi.entity;
 import jakarta.persistence.*;
 
 @Entity(name = "USER")
-public class User {
+public class User extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

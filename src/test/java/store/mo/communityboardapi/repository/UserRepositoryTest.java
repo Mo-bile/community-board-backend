@@ -22,13 +22,13 @@ public class UserRepositoryTest {
     @DisplayName("testCreateUser")
     public void testCreateUser() {
         User user = new User();
-        user.setUsername("john_doe");
-        user.setPassword("password123");
-        user.setEmail("john@example.com");
+        user.setUsername("mo_doe");
+        user.setPassword("password456");
+        user.setEmail("mo@example.com");
 
         User savedUser = userRepository.save(user);
         assertThat(savedUser.getId()).isNotNull();
-        assertThat(savedUser.getUsername()).isEqualTo("john_doe");
-        assertThat(savedUser.getEmail()).isEqualTo("john@example.com");
+        assertThat(savedUser.getUsername()).isEqualTo("mo_doe");
+        assertThat(savedUser.getEmail()).isEqualTo("mo@example.com");
     }
 }
