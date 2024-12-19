@@ -1,4 +1,4 @@
-package store.mo.communityboardapi.entity;
+package store.mo.communityboardapi.model.entity;
 
 import jakarta.persistence.*;
 
