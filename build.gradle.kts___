@@ -47,6 +47,11 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.withType<JavaExec> {
+    jvmArgs("-Xshare:off")
+}
+
+
 tasks.test {
     outputs.dir(project.extra["snippetsDir"]!!)
 }
