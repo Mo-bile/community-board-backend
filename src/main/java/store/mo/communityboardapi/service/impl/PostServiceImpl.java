@@ -1,5 +1,7 @@
 package store.mo.communityboardapi.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
 @Service
 public class PostServiceImpl implements PostService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PostServiceImpl.class);
+
     private final PostRepository postRepository;
 
     private final UserRepository userRepository;
@@ -40,6 +44,7 @@ public class PostServiceImpl implements PostService {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if (userOptional.isEmpty()) {
+            logger.warn("Unauthorized update attempt by User ID {}", userId);
             return Optional.empty();
         }
 
@@ -54,6 +59,9 @@ public class PostServiceImpl implements PostService {
 
         // 4. 게시글 저장
         Post savedPost = postRepository.save(post);
+
+        logger.info("Post with ID {} updated successfully by User ID {}"
+        ,savedPost.getAuthor().getId(),savedPost.getTitle());
 
         // 5. ResponseDto 생성
         PostResponseDto responseDto = new PostResponseDto(
@@ -77,6 +85,7 @@ public class PostServiceImpl implements PostService {
         Optional<Post> postOptional = postRepository.findById(postId);
 
         if (postOptional.isEmpty()) {
+            logger.warn("Post with ID {} not found", postId);
             return Optional.empty();
         }
 
@@ -84,6 +93,7 @@ public class PostServiceImpl implements PostService {
 
         // 2. 게시글과 수정인이 동일한지 검증
         if (!post.getAuthor().getId().equals(userId)) {
+            logger.warn("Unauthorized update attempt by User ID {} on Post ID {}", userId, postId);
             return Optional.empty();
         }
 
@@ -92,6 +102,8 @@ public class PostServiceImpl implements PostService {
         post.setContent(postRequestDto.getContent());
 
         Post updatedPost = postRepository.save(post);
+        logger.info("Post with ID {} updated successfully by User ID {}", postId, userId);
+
 
         // 4. 변경내역 응답
         PostResponseDto responseDto = new PostResponseDto(
@@ -112,12 +124,14 @@ public class PostServiceImpl implements PostService {
         Optional<Post> postOptional = postRepository.findById(postId);
 
         if (postOptional.isEmpty()) {
+            logger.warn("Post with ID {} not found", postId);
             return false;
         }
 
         Post post = postOptional.get();
 
         if (!post.getAuthor().getId().equals(userId)) {
+            logger.warn("Unauthorized update attempt by User ID {} on Post ID {}", userId, postId);
             return false;
         }
 
@@ -130,12 +144,14 @@ public class PostServiceImpl implements PostService {
 
         // Pageable 객체 생성 (offset은 페이지 번호로 계산)
         Pageable pageable = PageRequest.of(offset / limit, limit);
+        logger.info("Fetching posts with offset {} and limit {}", offset, limit);
+
 
         // db에서 필요한 부분만 조회
         Page<Post> postPage = postRepository.findAll(pageable);
 
         // 조회된 데이터로 반환
-        return postPage
+        List<PostResponseDto> postResponseDtos = postPage
                 .stream()
                 .map(post -> new PostResponseDto(
                         post.getId(),
@@ -146,6 +162,9 @@ public class PostServiceImpl implements PostService {
                         post.getUpdatedAt()
                 ))
                 .collect(Collectors.toList());
+
+        logger.info("Retrieved {} posts", postResponseDtos.size());
+        return postResponseDtos;
     }
 
     @Override
@@ -153,10 +172,12 @@ public class PostServiceImpl implements PostService {
 
         Optional<Post> postOptional = postRepository.findById(postId);
         if (postOptional.isEmpty()) {
+            logger.warn("Post with ID {} not found", postId);
             return Optional.empty();
         }
 
         Post post = postOptional.get();
+        logger.info("Post with Id {} is Found", postId);
 
         PostResponseDto responseDto = new PostResponseDto(
                 post.getId(),
