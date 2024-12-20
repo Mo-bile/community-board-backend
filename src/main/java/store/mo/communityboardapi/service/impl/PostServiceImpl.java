@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import store.mo.communityboardapi.dto.PostRequestDto;
@@ -135,7 +134,8 @@ public class PostServiceImpl implements PostService {
             return false;
         }
 
-        postRepository.delete(post);
+        post.setStatus(false);
+        postRepository.save(post);
         return true;
     }
 
@@ -148,7 +148,7 @@ public class PostServiceImpl implements PostService {
 
 
         // db에서 필요한 부분만 조회
-        Page<Post> postPage = postRepository.findAll(pageable);
+        Page<Post> postPage = postRepository.findAllByStatusTrue(pageable);
 
         // 조회된 데이터로 반환
         List<PostResponseDto> postResponseDtos = postPage

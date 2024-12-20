@@ -11,9 +11,13 @@ public abstract class BaseEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "status", nullable = false)
+    private Boolean status;
+
     @PrePersist // 콜백메서드 -> persist() or save() 호출 시 실행
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        status = true;
     }
 
     @PreUpdate
@@ -35,5 +39,13 @@ public abstract class BaseEntity {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }
