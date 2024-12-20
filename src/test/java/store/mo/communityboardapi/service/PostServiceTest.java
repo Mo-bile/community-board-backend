@@ -70,6 +70,7 @@ public class PostServiceTest {
         post1.setAuthor(mockUser);
         post1.setCreatedAt(LocalDateTime.now());
         post1.setUpdatedAt(LocalDateTime.now());
+        post1.setStatus(true);
 
         Post post2 = new Post();
         post2.setId(2L);
@@ -78,6 +79,7 @@ public class PostServiceTest {
         post2.setAuthor(mockUser);
         post2.setCreatedAt(LocalDateTime.now());
         post2.setUpdatedAt(LocalDateTime.now());
+        post2.setStatus(true);
 
         mockPosts = Arrays.asList(post1, post2);
     }
@@ -197,7 +199,7 @@ public class PostServiceTest {
     void getAllPosts_Success() {
         // Given
         Page<Post> mockPage = new PageImpl<>(mockPosts);
-        when(postRepository.findAll(any(Pageable.class))).thenReturn(mockPage);
+        when(postRepository.findAllByStatusTrue(any(Pageable.class))).thenReturn(mockPage);
 
         int offset = 0;
         int limit = 10;
@@ -211,14 +213,14 @@ public class PostServiceTest {
         assertEquals("Second Post", result.get(1).getTitle());
 
         // Verify
-        verify(postRepository, times(1)).findAll(any(Pageable.class));
+        verify(postRepository, times(1)).findAllByStatusTrue(any(Pageable.class));
     }
 
     @Test
     void getAllPosts_EmptyResult() {
         // Given
         Page<Post> emptyPage = new PageImpl<>(List.of());
-        when(postRepository.findAll(any(Pageable.class))).thenReturn(emptyPage);
+        when(postRepository.findAllByStatusTrue(any(Pageable.class))).thenReturn(emptyPage);
 
         int offset = 0;
         int limit = 10;
@@ -230,7 +232,7 @@ public class PostServiceTest {
         assertEquals(0, result.size());
 
         // Verify
-        verify(postRepository, times(1)).findAll(any(Pageable.class));
+        verify(postRepository, times(1)).findAllByStatusTrue(any(Pageable.class));
     }
 
     @Test
