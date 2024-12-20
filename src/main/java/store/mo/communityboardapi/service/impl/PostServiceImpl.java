@@ -1,6 +1,9 @@
 package store.mo.communityboardapi.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,10 +128,15 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostResponseDto> getAllPosts(int offset, int limit) {
 
-        return postRepository.findAll()
+        // Pageable 객체 생성 (offset은 페이지 번호로 계산)
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+
+        // db에서 필요한 부분만 조회
+        Page<Post> postPage = postRepository.findAll(pageable);
+
+        // 조회된 데이터로 반환
+        return postPage
                 .stream()
-                .skip(offset)
-                .limit(limit)
                 .map(post -> new PostResponseDto(
                         post.getId(),
                         post.getTitle(),
