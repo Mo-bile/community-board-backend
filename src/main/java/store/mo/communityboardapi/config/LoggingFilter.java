@@ -25,14 +25,16 @@ public class LoggingFilter implements Filter {
             throws IOException, ServletException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        CachingRequestWrapper cachingRequestWrapper = new CachingRequestWrapper(httpRequest);
+
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         // 요청 정보 로깅
-        String requestInfo = getRequestInfo(httpRequest);
+        String requestInfo = getRequestInfo(cachingRequestWrapper);
         logger.info("Incoming Request:\n{}", requestInfo);
 
         // 요청 처리
-        chain.doFilter(request, response);
+        chain.doFilter(cachingRequestWrapper, response);
 
         // 응답 정보 로깅
         String responseInfo = getResponseInfo(httpResponse);
