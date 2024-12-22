@@ -52,4 +52,34 @@ public class PostRepositoryTest {
 
     }
 
+    @Test
+    @DisplayName("n+1 문제")
+    public void testSelectPostProblem() {
+        List<Post> postAndComments = postRepository.findAll();
+        for (Post postAndComment : postAndComments) {
+            System.out.println("postAndComment.getContent() = " + postAndComment.getContent());
+            System.out.println("postAndComment.getComments() = " + postAndComment.getComments().size());
+        }
+    }
+
+    @Test
+    @DisplayName("n+1 문제 해결 방법 1 : fetch join")
+    public void testSelectPostSol1() {
+        List<Post> postAndComments = postRepository.fetchPostsAndCommentsUsingJoin();
+        for (Post postAndComment : postAndComments) {
+            System.out.println("postAndComment.getContent() = " + postAndComment.getContent());
+            System.out.println("postAndComment.getComments() = " + postAndComment.getComments().size());
+        }
+    }
+
+    @Test
+    @DisplayName("n+1 문제 해결 방법 2 : EntityGraph")
+    public void testSelectPostSol2() {
+//        List<Post> postAndComments = postRepository.fetchPostsAndCommentsUsingEntityGraph();
+//        for (Post postAndComment : postAndComments) {
+//            System.out.println("postAndComment.getContent() = " + postAndComment.getContent());
+//            System.out.println("postAndComment.getComments() = " + postAndComment.getComments().size());
+//        }
+    }
+
 }

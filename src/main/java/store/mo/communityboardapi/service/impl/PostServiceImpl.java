@@ -146,9 +146,12 @@ public class PostServiceImpl implements PostService {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         logger.info("Fetching posts with offset {} and limit {}", offset, limit);
 
-
-        // db에서 필요한 부분만 조회
+        // DB 에서 필요한 부분만 조회
         Page<Post> postPage = postRepository.findAllByStatusTrue(pageable);
+
+        // 각 Post 의 comments 에 접근 (n+1 문제 발생우려 존재) -> Fetch join, @EntityGraph 이용
+        postPage.forEach(post -> post.getComments().size());
+        logger.info("pos",String.valueOf(postPage.getSize()));
 
         // 조회된 데이터로 반환
         List<PostResponseDto> postResponseDtos = postPage
