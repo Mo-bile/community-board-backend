@@ -4,8 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import store.mo.communityboardapi.model.entity.Post;
+import store.mo.communityboardapi.entity.Post;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +14,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByStatusTrue(Pageable pageable);
     Optional<Post> findByIdAndStatusTrue(Long postId);
 
-    @Query("SELECT p FROM POST p JOIN FETCH p.comments WHERE p.status = true")
-    List<Post> fetchPostsAndCommentsUsingJoin();
+//    @Query("SELECT p FROM POST p JOIN FETCH p.comments WHERE p.status = true")
+//    List<Post> fetchPostsAndCommentsUsingJoin();
 
-//    @EntityGraph(attributePaths = {"comments"})
-//    List<Post> fetchPostsAndCommentsUsingEntityGraph();
+    @EntityGraph(attributePaths = {"comments"})
+    List<Post> findAllByStatusTrue();
+
 }

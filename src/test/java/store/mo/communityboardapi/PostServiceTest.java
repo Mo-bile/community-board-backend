@@ -1,6 +1,5 @@
-package store.mo.communityboardapi.service;
+package store.mo.communityboardapi;
 
-import jakarta.validation.constraints.AssertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,8 +10,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import store.mo.communityboardapi.dto.PostRequestDto;
 import store.mo.communityboardapi.dto.PostResponseDto;
-import store.mo.communityboardapi.model.entity.Post;
-import store.mo.communityboardapi.model.entity.User;
+import store.mo.communityboardapi.entity.Post;
+import store.mo.communityboardapi.entity.User;
 import store.mo.communityboardapi.repository.PostRepository;
 import store.mo.communityboardapi.repository.UserRepository;
 import store.mo.communityboardapi.service.impl.PostServiceImpl;
@@ -34,6 +33,8 @@ public class PostServiceTest {
     private PostRepository postRepository;
     @Mock
     private UserRepository userRepository;
+
+
     private User mockUser;
     private PostRequestDto mockCrePostRequestDto;
     private PostRequestDto mockUpPostRequestDto;

@@ -1,14 +1,15 @@
-package store.mo.communityboardapi.repository;
+package store.mo.communityboardapi;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.security.core.parameters.P;
 import org.springframework.test.annotation.Commit;
-import store.mo.communityboardapi.model.entity.Post;
-import store.mo.communityboardapi.model.entity.User;
+import store.mo.communityboardapi.entity.Post;
+import store.mo.communityboardapi.entity.User;
+import store.mo.communityboardapi.repository.PostRepository;
+import store.mo.communityboardapi.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,29 +58,46 @@ public class PostRepositoryTest {
     public void testSelectPostProblem() {
         List<Post> postAndComments = postRepository.findAll();
         for (Post postAndComment : postAndComments) {
+            System.out.println(" --- 시작 지점 --- ");
             System.out.println("postAndComment.getContent() = " + postAndComment.getContent());
+            System.out.println(" --- n + 1 쿼리 --- ");
             System.out.println("postAndComment.getComments() = " + postAndComment.getComments().size());
         }
     }
 
     @Test
-    @DisplayName("n+1 문제 해결 방법 1 : fetch join")
-    public void testSelectPostSol1() {
-        List<Post> postAndComments = postRepository.fetchPostsAndCommentsUsingJoin();
+    @DisplayName("n+1 문제 해결 방법 1 : Eager Loading으로 N+1 문제 해결")
+    public void testSelectPostWithEagerLoading() {
+        List<Post> postAndComments = postRepository.findAll(); // Post와 Comment를 한 번에 가져옴
+        for (Post postAndComment : postAndComments) {
+            System.out.println("postAndComment.getContent() = " + postAndComment.getContent());
+            System.out.println(" --- Eager 로딩 확인 --- ");
+            System.out.println("postAndComment.getComments() = " + postAndComment.getComments().size()); // 추가 쿼리 없음
+
+        }
+    }
+
+
+//    @Test
+//    @DisplayName("n+1 문제 해결 방법 2 : fetch join")
+//    public void testSelectPostSol1() {
+//        List<Post> postAndComments = postRepository.fetchPostsAndCommentsUsingJoin();
+//        for (Post postAndComment : postAndComments) {
+//            System.out.println("postAndComment.getContent() = " + postAndComment.getContent());
+//            System.out.println("postAndComment.getComments() = " + postAndComment.getComments().size());
+//        }
+//    }
+
+    @Test
+    @DisplayName("n+1 문제 해결 방법 3 : EntityGraph")
+    public void testSelectPostSol2() {
+        List<Post> postAndComments = postRepository.findAllByStatusTrue();
         for (Post postAndComment : postAndComments) {
             System.out.println("postAndComment.getContent() = " + postAndComment.getContent());
             System.out.println("postAndComment.getComments() = " + postAndComment.getComments().size());
         }
     }
 
-    @Test
-    @DisplayName("n+1 문제 해결 방법 2 : EntityGraph")
-    public void testSelectPostSol2() {
-//        List<Post> postAndComments = postRepository.fetchPostsAndCommentsUsingEntityGraph();
-//        for (Post postAndComment : postAndComments) {
-//            System.out.println("postAndComment.getContent() = " + postAndComment.getContent());
-//            System.out.println("postAndComment.getComments() = " + postAndComment.getComments().size());
-//        }
-    }
-
 }
+
+

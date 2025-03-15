@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import store.mo.communityboardapi.dto.PostRequestDto;
 import store.mo.communityboardapi.dto.PostResponseDto;
-import store.mo.communityboardapi.model.entity.Post;
-import store.mo.communityboardapi.model.entity.User;
 import store.mo.communityboardapi.repository.PostRepository;
 import store.mo.communityboardapi.repository.UserRepository;
+import store.mo.communityboardapi.entity.Post;
+import store.mo.communityboardapi.entity.User;
 import store.mo.communityboardapi.service.PostService;
 
 import java.util.List;
@@ -63,14 +63,23 @@ public class PostServiceImpl implements PostService {
         ,savedPost.getAuthor().getId(),savedPost.getTitle());
 
         // 5. ResponseDto 생성
-        PostResponseDto responseDto = new PostResponseDto(
-                savedPost.getId(),
-                savedPost.getTitle(),
-                savedPost.getContent(),
-                user.getUsername(),
-                savedPost.getCreatedAt(),
-                savedPost.getUpdatedAt()
-        );
+//        PostResponseDto responseDto = new PostResponseDto(
+//                savedPost.getId(),
+//                savedPost.getTitle(),
+//                savedPost.getContent(),
+//                user.getUsername(),
+//                savedPost.getCreatedAt(),
+//                savedPost.getUpdatedAt()
+//        );
+
+        PostResponseDto responseDto = PostResponseDto.builder()
+                .id(savedPost.getId())
+                .title(savedPost.getTitle())
+                .content(savedPost.getContent())
+                .authorUserName(user.getUsername())
+                .createdAt(savedPost.getCreatedAt())
+                .updatedAt(savedPost.getUpdatedAt())
+                .build();
 
         return Optional.of(responseDto);
 

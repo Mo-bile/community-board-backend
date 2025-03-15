@@ -1,12 +1,15 @@
-package store.mo.communityboardapi.repository;
+package store.mo.communityboardapi;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Commit;
-import store.mo.communityboardapi.model.entity.Comment;
-import store.mo.communityboardapi.model.entity.Post;
-import store.mo.communityboardapi.model.entity.User;
+import store.mo.communityboardapi.entity.Comment;
+import store.mo.communityboardapi.entity.Post;
+import store.mo.communityboardapi.entity.User;
+import store.mo.communityboardapi.repository.CommentRepository;
+import store.mo.communityboardapi.repository.PostRepository;
+import store.mo.communityboardapi.repository.UserRepository;
 
 import java.util.Optional;
 import java.util.stream.LongStream;
